@@ -83,7 +83,7 @@ public class DemoWrapperClass {
 	 * @return		Returns String of numberRepresentations result.
 	 */
 	public static String numberRepresentations(int x) {
-		return String.format("%-7s  %-7s  %-7s %-7s", Integer.toString(x, 10),
+		return String.format("%-7s  %-7s  %-7s  %s", Integer.toString(x, 10),
 													  Integer.toHexString(x),
 													  Integer.toOctalString(x),
 													  Integer.toBinaryString(x));
@@ -99,18 +99,18 @@ public class DemoWrapperClass {
 	 */
 	public static String charProperties(char c) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(c+" ");
+		sb.append(c);
 		if(Character.isLowerCase(c)) {
-			sb.append("lowercase letter");
+			sb.append(" lowercase letter");
 		}
 		if(Character.isUpperCase(c)) {
-			sb.append("uppercase letter");
+			sb.append(" uppercase letter");
 		}
 		if(Character.isWhitespace(c)) {
-			sb.append("white space");
+			sb.append(" white space");
 		}
 		if(Character.isDigit(c)) {
-			sb.append("number");
+			sb.append(" number");
 		}
 		return sb.toString();
 	}
@@ -123,6 +123,9 @@ public class DemoWrapperClass {
 	 */
 	public static double parseSum(String[] arr) {
 		double result = 0;
+		if(arr == null) {
+			return result;
+		}
 		for(String el:arr) {
 			result += Double.parseDouble(el);
 		}
@@ -144,10 +147,9 @@ public class DemoWrapperClass {
 	 * @return		Random Char value.
 	 */
 	public static char getRandomLetter() {
-		int random = rand.nextInt(57)+'A';
-		while(random > 'Z' && random < 'a') {
-			random = rand.nextInt(57)+'A';
-		}
-		return Character.toChars(random)[0];
+		int randCap = rand.nextInt(26)+'A';
+		int randLow = rand.nextInt(26)+'a';
+		boolean random = rand.nextBoolean();
+		return Character.toChars(random ? randCap : randLow)[0];
 	}
 }
