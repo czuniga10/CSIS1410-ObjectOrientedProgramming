@@ -3,17 +3,24 @@ package keyValue;
 import java.util.Objects;
 
 /**
+ * Similar to a Dictionary, the KeyValuePair class allows one to store data
+ * where a Key of (mostly) any Type is matched with a Value of (mostly) any Type
+ * and extends the Comparable Interface for easy comparability. 
+ * 
  * @author Chad Z
- * @param <K>
- * @param <V>
+ * @param <K>		Key
+ * @param <V>		Value
  */
-public class KeyValuePair<K, V> {
+public class KeyValuePair<K extends Comparable<K>, V> implements Comparable<KeyValuePair<K,V>>{
 	private K key;
 	private V value;
 	
 	/**
-	 * @param key
-	 * @param value
+	 * Initializes the KeyValuePair class with a key and value of (mostly) any
+	 * type.
+	 * 
+	 * @param key		Key of KeyValuePair.
+	 * @param value		Value of KeyValuePair.
 	 */
 	public KeyValuePair(K key, V value) {
 		this.key = key;
@@ -21,6 +28,8 @@ public class KeyValuePair<K, V> {
 	}
 
 	/**
+	 * Returns the Key.
+	 * 
 	 * @return the key
 	 */
 	public K getKey() {
@@ -28,6 +37,8 @@ public class KeyValuePair<K, V> {
 	}
 
 	/**
+	 * Returns the Value.
+	 * 
 	 * @return the value
 	 */
 	public V getValue() {
@@ -52,5 +63,16 @@ public class KeyValuePair<K, V> {
 	@Override
 	public String toString() {
 		return "(" + key + ", " + value + ")";
+	}
+
+	@Override
+	public int compareTo(KeyValuePair<K, V> o) {
+		if(this.key.hashCode() < o.getKey().hashCode()) {
+			return -1;
+		} else if(this.key.hashCode() > o.getKey().hashCode()) {
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 }
