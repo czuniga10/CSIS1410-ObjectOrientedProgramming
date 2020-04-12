@@ -58,5 +58,4 @@ public class Module04Prep {
 		System.out.println("rotated 1 to the left : " + list);
 		System.out.println();
 	}
-
 }
