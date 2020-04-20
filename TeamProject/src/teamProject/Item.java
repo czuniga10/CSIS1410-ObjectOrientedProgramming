@@ -1,24 +1,49 @@
 package teamProject;
 
+/**
+ * Item Class is used to store lists of static menu items, as well as
+ * the items in the users cart using ArrayLists. This class also provides
+ * the following functionality:
+ *         -getName()
+ *         -getPrice()
+ *         -getDescription()
+ *         -toString()
+ * 
+ * @author Thomas Olvera and Chad Zuniga
+ */
 public class Item {
-	private String name;
-	private double price;
-	
-	public Item(String name, double price) {
-		this.name = name;
-		this.price = price; // needs validation
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public double getPrice() {
-		return price;
-	}
-	
-	@Override
-	public String toString() {
-		return String.format("%s : %f", name, price);
-	}
+    private String name;
+    private double price;
+    private String description;
+    
+    public Item(String name, double price) {
+        this.name = name;
+        if (price < 1) {
+            throw new IllegalArgumentException("Variable price can not be less than 0...");
+        }
+        this.price = price;
+        this.description = "Lorem ipsum dolor sit amet, consectetur adipiscing "
+                + "elit, sed do eiusmod tempor incididunt ut labore et dolore "
+                + "magna aliqua. Ut enim ad minim veniam";
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public double getPrice() {
+        return price;
+    }
+    
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s : %f", name, price);
+    }
 }

@@ -1,0 +1,7 @@
+item1,12.50
+item2,22.00
+item3,50.00
+item4,8.50
+item5,1.2
+item6,9.75
+item7,4.30
