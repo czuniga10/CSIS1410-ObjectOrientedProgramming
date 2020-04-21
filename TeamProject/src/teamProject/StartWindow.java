@@ -3,28 +3,23 @@ package teamProject;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
-import java.awt.FlowLayout;
-import javax.swing.JButton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridLayout;
-import java.awt.Image;
-
-import java.awt.GridBagLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.awt.event.ActionEvent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
 
 /**
  * 
@@ -32,12 +27,22 @@ import java.awt.event.ActionEvent;
  * @author Tomas Olvera
  * @author Chad Zuniga
  */
+@SuppressWarnings("serial")
 public class StartWindow extends JFrame {
 
 	private JPanel cardContainer;
 	private JPanel menu;
 	private JPanel summary;
 	private List<Item> cartItems = new ArrayList<>();
+	private List<Item> menuItems = new ArrayList<>(
+			Arrays.asList(new Item("Hamburger",3.50),
+					new Item("Cheeseburger",5.00),
+					new Item("DoubleCheeseburger",5.50),
+					new Item("TripleCheeseburger",6.00),
+					new Item("FrenchFries",2.50),
+					new Item("Drink",1.50)
+					));
+	private JScrollPane sp;
 
 	/**
 	 * Launch the application.
@@ -71,7 +76,7 @@ public class StartWindow extends JFrame {
 		menu = new JPanel();
 		menu.setLayout(new BorderLayout(0, 0));
 		
-		JScrollPane sp = new JScrollPane(cardContainer, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		sp = new JScrollPane(cardContainer, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		sp.getVerticalScrollBar().setUnitIncrement(16);
 		
 		summary = new SummaryWindow();
@@ -98,13 +103,18 @@ public class StartWindow extends JFrame {
 		rightContent.setBorder(new EmptyBorder(0, 0, 0, 50));
 		rightContent.add(Box.createVerticalStrut(85));
 		
+		// Set menu items
+		for(Item el:menuItems) {
+			createItemComponent(leftContent, rightContent, el);
+		}
+		
 		// adding menu items
-		createItemComponent(leftContent, rightContent, new Item("Pizza", 12.5));
-		createItemComponent(leftContent, rightContent, new Item("Pizza1", 12.5));
-		createItemComponent(leftContent, rightContent, new Item("Pizza2", 12.5));
-		createItemComponent(leftContent, rightContent, new Item("Pizza3", 12.5));
-		createItemComponent(leftContent, rightContent, new Item("Pizza4", 12.5));
-		createItemComponent(leftContent, rightContent, new Item("Pizza5", 12.5));
+//		createItemComponent(leftContent, rightContent, new Item("Pizza", 12.5));
+//		createItemComponent(leftContent, rightContent, new Item("Pizza1", 12.5));
+//		createItemComponent(leftContent, rightContent, new Item("Pizza2", 12.5));
+//		createItemComponent(leftContent, rightContent, new Item("Pizza3", 12.5));
+//		createItemComponent(leftContent, rightContent, new Item("Pizza4", 12.5));
+//		createItemComponent(leftContent, rightContent, new Item("Pizza5", 12.5));
 		
 		// 'continue' button at the bottom
 		JButton btnNewButton = new JButton("Continue");
@@ -112,6 +122,9 @@ public class StartWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				menu.setVisible(false);
 				summary.setVisible(true);
+				setBounds(100, 100, 750, 850); //sets the bounds of the new page
+				sp.getVerticalScrollBar().setValue(0);//moves users view to top of the page
+//				SummaryWindow.triggerCartListUpdate(cartItems);
 			}
 		});
 		menu.add(btnNewButton, BorderLayout.SOUTH);
@@ -120,16 +133,16 @@ public class StartWindow extends JFrame {
 	private void createItemComponent(JPanel leftContent, JPanel rightContent, Item item) {
 		// menuItem
 		JPanel menuItem = new JPanel();
-		leftContent.add(Box.createVerticalStrut(60));
+		leftContent.add(Box.createVerticalStrut(52));
 		leftContent.add(menuItem);
 		menuItem.setLayout(new BoxLayout(menuItem, BoxLayout.Y_AXIS));
 		
-		JLabel title = new JLabel("Item 1");
+		JLabel title = new JLabel(item.getName());
 		title.setFont(new Font("Arial", Font.BOLD, 14));
 		menuItem.add(title);
 		menuItem.add(Box.createVerticalStrut(10));
 		
-		JLabel description = new JLabel("<html><div style=\\\"width:175px;\\\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis lacinia at orci non elementum.</div><html>");
+		JLabel description = new JLabel(String.format("<html><div style=\\\"width:200px;\\\">%s</div><html>",item.getDescription()));
 		description.setFont(new Font("Arial", Font.PLAIN, 12));
 		menuItem.add(description);
 		menuItem.add(Box.createVerticalStrut(10));
@@ -138,21 +151,22 @@ public class StartWindow extends JFrame {
 		btnOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cartItems.add(item);
+				SummaryWindow.updateCartList(item);
 				System.out.println(cartItems);
 			}
 		});
 		menuItem.add(btnOrder);
 		
 		// picture
-		ImageIcon icon = new ImageIcon(this.getClass().getResource("/images/burger.jpg"));
+		ImageIcon icon = new ImageIcon(this.getClass().getResource(String.format("/images/%s.png",item.getName())));
 		Image img = icon.getImage();
-		Image scaledImg = img.getScaledInstance(130, 130, Image.SCALE_SMOOTH);
+		Image scaledImg = img.getScaledInstance(120, 125, Image.SCALE_SMOOTH);
 		ImageIcon scaledIcon = new ImageIcon(scaledImg);
 		
 		// needs fixing
 		JLabel imgContainer = new JLabel();
 		imgContainer.setIcon(scaledIcon);
-		rightContent.add(Box.createVerticalStrut(40));
+		rightContent.add(Box.createVerticalStrut(50));
 		rightContent.add(imgContainer);
 	}
 }

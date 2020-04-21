@@ -21,6 +21,7 @@ import java.awt.Desktop;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 /**
@@ -35,10 +36,12 @@ import java.awt.event.ActionEvent;
  * @author Tomas Olvera
  * @author Chad Zuniga
  */
+@SuppressWarnings("serial")
 public class SummaryWindow extends JPanel {
 	private JLabel totalPriceLbl;
 	private JLabel responseLbl;
 	static BillingSystem b = new BillingSystem("menuItems.txt");
+//	static BillingSystem b = new BillingSystem();
 	
 	/**
 	 * Create the panel.
@@ -198,4 +201,10 @@ public class SummaryWindow extends JPanel {
 		lblPrice.setBounds(633, 153 + offset, 52, 14);
 		add(lblPrice);
 	}
+	
+
+	public static void updateCartList(Item i) {
+		b.addItemToList(i);
+	}
+
 }

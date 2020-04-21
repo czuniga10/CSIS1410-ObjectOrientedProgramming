@@ -47,6 +47,18 @@ public class BillingSystem {
 		}
 	}
 	
+	public BillingSystem() {
+		itemList = new ArrayList<Item>();
+	}
+	
+	public BillingSystem(List<Item> items) {
+		itemList = items;
+	}
+	
+	public void addItemToList(Item i) {
+		itemList.add(i);
+	}
+
 	public double calculateSubtotal() {
 		for (Item el : itemList) {
 			subTotal += el.getPrice();
