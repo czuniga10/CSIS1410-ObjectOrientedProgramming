@@ -21,7 +21,6 @@ import java.awt.Desktop;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.List;
 import java.awt.event.ActionEvent;
 
 /**
@@ -36,12 +35,9 @@ import java.awt.event.ActionEvent;
  * @author Tomas Olvera
  * @author Chad Zuniga
  */
-@SuppressWarnings("serial")
 public class SummaryWindow extends JPanel {
 	private JLabel totalPriceLbl;
 	private JLabel responseLbl;
-	static BillingSystem b = new BillingSystem("menuItems.txt");
-//	static BillingSystem b = new BillingSystem();
 	
 	/**
 	 * Create the panel.
@@ -51,20 +47,15 @@ public class SummaryWindow extends JPanel {
 		setLayout(null);
 		
 		int offset = 0;
-		for (Item el : b.getItemList()) {
+		for (Item el : StartWindow.b.getCartList()) {
 			createBillingItem(this, offset, el.getName(), el.getPrice());
 			offset += 50;
 		}
 		
-		createBillingItem(this, offset, "Subtotal", b.calculateSubtotal());
-		
-		/*JButton btnBack = new JButton("Back To Menu");
-		createBtnBack(panelMenu, panelBilling, btnBack);*/
+		createBillingItem(this, offset, "Subtotal", StartWindow.b.calculateSubtotal());
 		
 		JPanel gratuityPanel = new JPanel();
 		createGratuitySection(this, gratuityPanel);
-		
-		//panelBilling.add(btnBack);
 		
 		createTotalSection(this);
 	}
@@ -76,8 +67,7 @@ public class SummaryWindow extends JPanel {
 		itemTotalLbl.setFont(new Font("Arial", Font.BOLD, 35));
 		panelBilling.add(itemTotalLbl);
 		
-		totalPriceLbl = new JLabel(String.format("$%.2f", b.getTotalPrice()));
-		System.out.println(b.getTotalPrice());
+		totalPriceLbl = new JLabel(String.format("$%.2f", StartWindow.b.getTotalPrice()));
 		totalPriceLbl.setBounds(637, 750, 61, 16);
 		totalPriceLbl.setFont(new Font("Arial", Font.BOLD, 15));
 		panelBilling.add(totalPriceLbl);
@@ -85,16 +75,6 @@ public class SummaryWindow extends JPanel {
 		JSeparator separator = new JSeparator();
 		separator.setBounds(47, 785, 630, 2);
 		panelBilling.add(separator);
-		
-		/*JButton payButton = new JButton("Pay");
-		payButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
-		payButton.setBounds(300, 810, 100, 50);
-		payButton.setFont(new Font("Arial", Font.BOLD, 13));
-		panelBilling.add(payButton);*/
 		
 		responseLbl = new JLabel("");
 		responseLbl.setBounds(260, 840, 200, 50);
@@ -104,9 +84,11 @@ public class SummaryWindow extends JPanel {
 		JButton payButton = new JButton("Pay");
 		payButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String[] response = Receipt.printReceipt(b.getItemList(),b.getGratuity(),b.getSubtotal(),b.getTotalPrice());
+				String[] response = Receipt.printReceipt(StartWindow.b.getCartList(),
+						StartWindow.b.getGratuity(),StartWindow.b.getSubtotal(),
+						StartWindow.b.getTotalPrice());
 				responseLbl.setText(response[0]);
-				try { 
+				try {
 		            File u = new File("C:\\Users\\orefl\\git\\TeamAssignment\\TeamProject\\receipts\\receipt"+response[1]); 
 		            Desktop d = Desktop.getDesktop(); 
 		            d.open(u); 
@@ -138,8 +120,8 @@ public class SummaryWindow extends JPanel {
 		tenPercentBtn.setFont(new Font("Arial", Font.BOLD, 18));
 		tenPercentBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				b.setGratuity(0.10);
-				totalPriceLbl.setText(String.format("$%.2f", b.getTotalPrice()));
+				StartWindow.b.setGratuity(0.10);
+				totalPriceLbl.setText(String.format("$%.2f", StartWindow.b.getTotalPrice()));
 			}
 		});
 		
@@ -151,8 +133,8 @@ public class SummaryWindow extends JPanel {
 		fifteenPercentBtn.setFont(new Font("Arial", Font.BOLD, 18));
 		fifteenPercentBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				b.setGratuity(0.15);
-				totalPriceLbl.setText(String.format("$%.2f", b.getTotalPrice()));
+				StartWindow.b.setGratuity(0.15);
+				totalPriceLbl.setText(String.format("$%.2f", StartWindow.b.getTotalPrice()));
 			}
 		});
 		
@@ -164,22 +146,11 @@ public class SummaryWindow extends JPanel {
 		twentyPercentBtn.setFont(new Font("Arial", Font.BOLD, 18));
 		twentyPercentBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				b.setGratuity(0.20);
-				totalPriceLbl.setText(String.format("$%.2f", b.getTotalPrice()));
+				StartWindow.b.setGratuity(0.20);
+				totalPriceLbl.setText(String.format("$%.2f", StartWindow.b.getTotalPrice()));
 			}
 		});
 	}
-
-	/*private void createBtnBack(JPanel panelMenu, JPanel panelBilling, JButton btnBack) {
-		btnBack.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				panelMenu.setVisible(true);
-				panelBilling.setVisible(false);
-			}
-		});
-		btnBack.setBounds(10, 11, 120, 23);
-		panelBilling.add(btnBack);
-	}*/
 
 	private void createBillingItem(JPanel panelBilling, int offset, String name, double price) {
 		JLabel lblYourOrder = new JLabel("Your Order");
@@ -189,7 +160,7 @@ public class SummaryWindow extends JPanel {
 		
 		JLabel lblItem = new JLabel(name);
 		lblItem.setFont(new Font("Arial", Font.BOLD, 15));
-		lblItem.setBounds(47, 153 + offset, 83, 14);
+		lblItem.setBounds(47, 153 + offset, 200, 14);
 		add(lblItem);
 		
 		JSeparator separator1 = new JSeparator();
@@ -201,10 +172,4 @@ public class SummaryWindow extends JPanel {
 		lblPrice.setBounds(633, 153 + offset, 52, 14);
 		add(lblPrice);
 	}
-	
-
-	public static void updateCartList(Item i) {
-		b.addItemToList(i);
-	}
-
 }

@@ -18,13 +18,13 @@ import java.util.List;
  * @author Tomas Olvera and Chad Zuniga
  */
 public class BillingSystem {
-	private List<Item> itemList;
+	private List<Item> cartList;
 	private double totalPrice;
 	private double subTotal;
 	private double gratuity;
 	
-	public BillingSystem(String readFile) {
-		itemList = new ArrayList<>();
+	/*public BillingSystem(String readFile) {
+		cartList = new ArrayList<>();
 		
 		try {
 			FileReader reader = new FileReader(readFile);
@@ -33,7 +33,7 @@ public class BillingSystem {
 			
 			while (line != null) {
 				String[] c = line.split(",");
-				itemList.add(new Item(c[0], Double.parseDouble(c[1])));
+				cartList.add(new Item(c[0], Double.parseDouble(c[1])));
 				line = buffer.readLine();
 			}
 		}
@@ -45,22 +45,14 @@ public class BillingSystem {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
+	}*/
+	
+	public BillingSystem(List<Item> cartList) {
+		this.cartList = cartList;
 	}
 	
-	public BillingSystem() {
-		itemList = new ArrayList<Item>();
-	}
-	
-	public BillingSystem(List<Item> items) {
-		itemList = items;
-	}
-	
-	public void addItemToList(Item i) {
-		itemList.add(i);
-	}
-
 	public double calculateSubtotal() {
-		for (Item el : itemList) {
+		for (Item el : cartList) {
 			subTotal += el.getPrice();
 		}
 		
@@ -68,8 +60,16 @@ public class BillingSystem {
 		return subTotal;
 	}
 	
-	public List<Item> getItemList() {
-		return itemList;
+	public List<Item> getCartList() {
+		return cartList;
+	}
+	
+	/**
+	 * 
+	 * @param newCartList
+	 */
+	public void setCartList(List<Item> newCartList) {
+		this.cartList = newCartList;
 	}
 	
 	/**

@@ -1,0 +1,6 @@
+Hamburger_3.50_Beef patty topped with pickles, onion, ketchup, and mustard on a toasted bun. - 240 cal.
+Cheeseburger_5.00_A quarter-pound beef patty, American cheese, crisp lettuce, tomato, pickle, ketchup, mayo, and onion on a toasted bun. - 570 cal
+DoubleCheeseburger_5.50_A half-pound beef patty, American cheese, crisp lettuce, tomato, pickle, ketchup, mayo, and onion on a toasted bun. - 810 cal
+TripleCheeseburger_6.00_A three-quarter pound beef patty, American cheese, crisp lettuce, tomato, pickle, ketchup, mayo, and onion on a toasted bun. - 1,100 cal
+FrenchFries_2.50_Natural-cut, skin-on, sea-salted fries served hot and crispy. - 380 cal
+Drink_1.50_The cold, refreshing, sparkling classic that America loves. - 275 cal

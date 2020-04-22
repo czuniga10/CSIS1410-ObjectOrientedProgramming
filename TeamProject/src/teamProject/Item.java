@@ -16,15 +16,13 @@ public class Item {
     private double price;
     private String description;
     
-    public Item(String name, double price) {
+    public Item(String name, double price, String description) {
         this.name = name;
         if (price < 1) {
             throw new IllegalArgumentException("Variable price can not be less than 0...");
         }
         this.price = price;
-        this.description = "Lorem ipsum dolor sit amet, consectetur adipiscing "
-                + "elit, sed do eiusmod tempor incididunt ut labore et dolore "
-                + "magna aliqua. Ut enim ad minim veniam";
+        this.description = description;
     }
     
     public String getName() {
@@ -44,6 +42,6 @@ public class Item {
 
     @Override
     public String toString() {
-        return String.format("%s : %f", name, price);
+        return String.format("%s : %.2f", name, price);
     }
 }

@@ -3,23 +3,34 @@ package teamProject;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import java.awt.FlowLayout;
+import javax.swing.JButton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.GridBagLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.awt.event.ActionEvent;
 
 /**
  * 
@@ -27,22 +38,27 @@ import javax.swing.border.EmptyBorder;
  * @author Tomas Olvera
  * @author Chad Zuniga
  */
-@SuppressWarnings("serial")
 public class StartWindow extends JFrame {
-
 	private JPanel cardContainer;
 	private JPanel menu;
 	private JPanel summary;
-	private List<Item> cartItems = new ArrayList<>();
-	private List<Item> menuItems = new ArrayList<>(
+	
+	/*private List<Item> itemList = new ArrayList<>(Arrays.asList(new Item("Large Pizza", 12.5), 
+			new Item("Pancakes", 6.0), new Item("Eggs", 8.0), new Item("Cookies", 2.5),
+			new Item("Sandwich", 7.50), new Item("Burrito", 11.0), new Item("Rice Bowl", 5.0)));*/
+	
+	/*private List<Item> itemList = new ArrayList<>(
 			Arrays.asList(new Item("Hamburger",3.50),
-					new Item("Cheeseburger",5.00),
-					new Item("DoubleCheeseburger",5.50),
-					new Item("TripleCheeseburger",6.00),
-					new Item("FrenchFries",2.50),
-					new Item("Drink",1.50)
-					));
-	private JScrollPane sp;
+                    new Item("Cheeseburger",5.00),
+                    new Item("DoubleCheeseburger",5.50),
+                    new Item("TripleCheeseburger",6.00),
+                    new Item("FrenchFries",2.50),
+                    new Item("Drink",1.50)
+                    ));*/
+	
+	private List<Item> itemList = new ArrayList<>();
+	private List<Item> cartList = new ArrayList<>();
+	static BillingSystem b;
 
 	/**
 	 * Launch the application.
@@ -64,6 +80,10 @@ public class StartWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public StartWindow() {
+		parseTextMenu("burgerJoint.txt");
+		b = new BillingSystem(cartList);
+		System.out.println(b.getCartList());
+		
 		// JFrame properties
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 800);
@@ -76,13 +96,13 @@ public class StartWindow extends JFrame {
 		menu = new JPanel();
 		menu.setLayout(new BorderLayout(0, 0));
 		
-		sp = new JScrollPane(cardContainer, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane sp = new JScrollPane(cardContainer, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		sp.getVerticalScrollBar().setUnitIncrement(16);
 		
-		summary = new SummaryWindow();
+		//summary = new SummaryWindow();
 		
 		cardContainer.add(menu);
-		cardContainer.add(summary);
+		//cardContainer.add(summary);
 		
 		getContentPane().add(sp);
 		
@@ -103,28 +123,22 @@ public class StartWindow extends JFrame {
 		rightContent.setBorder(new EmptyBorder(0, 0, 0, 50));
 		rightContent.add(Box.createVerticalStrut(85));
 		
-		// Set menu items
-		for(Item el:menuItems) {
+		// adding menu items
+		for (Item el : itemList) {
 			createItemComponent(leftContent, rightContent, el);
 		}
-		
-		// adding menu items
-//		createItemComponent(leftContent, rightContent, new Item("Pizza", 12.5));
-//		createItemComponent(leftContent, rightContent, new Item("Pizza1", 12.5));
-//		createItemComponent(leftContent, rightContent, new Item("Pizza2", 12.5));
-//		createItemComponent(leftContent, rightContent, new Item("Pizza3", 12.5));
-//		createItemComponent(leftContent, rightContent, new Item("Pizza4", 12.5));
-//		createItemComponent(leftContent, rightContent, new Item("Pizza5", 12.5));
 		
 		// 'continue' button at the bottom
 		JButton btnNewButton = new JButton("Continue");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				summary = new SummaryWindow();
+				cardContainer.add(summary);
+				setSize(755, 935);
+				setLocationRelativeTo(null);
+				sp.getVerticalScrollBar().setValue(0);
 				menu.setVisible(false);
 				summary.setVisible(true);
-				setBounds(100, 100, 750, 850); //sets the bounds of the new page
-				sp.getVerticalScrollBar().setValue(0);//moves users view to top of the page
-//				SummaryWindow.triggerCartListUpdate(cartItems);
 			}
 		});
 		menu.add(btnNewButton, BorderLayout.SOUTH);
@@ -142,7 +156,7 @@ public class StartWindow extends JFrame {
 		menuItem.add(title);
 		menuItem.add(Box.createVerticalStrut(10));
 		
-		JLabel description = new JLabel(String.format("<html><div style=\\\"width:200px;\\\">%s</div><html>",item.getDescription()));
+		JLabel description = new JLabel(String.format("<html><div style=\\\"width:175px;\\\">%s</div><html>", item.getDescription()));
 		description.setFont(new Font("Arial", Font.PLAIN, 12));
 		menuItem.add(description);
 		menuItem.add(Box.createVerticalStrut(10));
@@ -150,9 +164,8 @@ public class StartWindow extends JFrame {
 		JButton btnOrder = new JButton("Order");
 		btnOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cartItems.add(item);
-				SummaryWindow.updateCartList(item);
-				System.out.println(cartItems);
+				cartList.add(item);
+				System.out.println(b.getCartList());
 			}
 		});
 		menuItem.add(btnOrder);
@@ -160,13 +173,34 @@ public class StartWindow extends JFrame {
 		// picture
 		ImageIcon icon = new ImageIcon(this.getClass().getResource(String.format("/images/%s.png",item.getName())));
 		Image img = icon.getImage();
-		Image scaledImg = img.getScaledInstance(120, 125, Image.SCALE_SMOOTH);
+		Image scaledImg = img.getScaledInstance(130, 130, Image.SCALE_SMOOTH);
 		ImageIcon scaledIcon = new ImageIcon(scaledImg);
 		
-		// needs fixing
 		JLabel imgContainer = new JLabel();
 		imgContainer.setIcon(scaledIcon);
 		rightContent.add(Box.createVerticalStrut(50));
 		rightContent.add(imgContainer);
+	}
+	
+	public void parseTextMenu(String readFile) {
+		try {
+			FileReader reader = new FileReader(String.format("menus/%s", readFile));
+			BufferedReader buffer = new BufferedReader(reader);
+			String line = buffer.readLine();
+			
+			while (line != null) {
+				String[] c = line.split("_");
+				itemList.add(new Item(c[0], Double.parseDouble(c[1]), c[2]));
+				line = buffer.readLine();
+			}
+		}
+		
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
